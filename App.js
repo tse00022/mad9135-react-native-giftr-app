@@ -1,12 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Platform } from 'react-native';
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import PeopleScreen from './screens/PeopleScreen';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider>
+    <SafeAreaView style={styles.container}>
+      <PeopleScreen />
+    </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -16,5 +19,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 
   },
 });

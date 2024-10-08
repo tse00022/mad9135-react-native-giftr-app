@@ -1,9 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, TextInput, Button, TouchableOpacity } from "react-native";
+import PeopleContext from "../PeopleContext";
 
 export default function AddPersonScreen({ navigation }) {
   const [name, setName] = useState("");
   const [dob, setDob] = useState("");
+  const { addPerson} = useContext(PeopleContext)
+
+  const savePerson = () => {
+    if (!name || !dob) {
+      alert("Please fill in all fields");
+      return;
+    }
+    addPerson(name, dob);
+    // save person
+    navigation.goBack();
+  }
+
+  const goBack = () => {
+    navigation.goBack();
+  }
 
   return (
     <View style={{flex:1, padding: 20, justifyContent: "space-between"}}>
@@ -21,11 +37,17 @@ export default function AddPersonScreen({ navigation }) {
       </View>
 
       <View style={{alignItems:"center"}}>
-        <TouchableOpacity style={{alignItems: "center", justifyContent: "center", height: 40, backgroundColor: "skyblue", marginBottom: 10, borderColor: "Black", borderWidth: 1, width: "94%"}}>
+        <TouchableOpacity
+          onPress={savePerson}
+          style={{alignItems: "center", justifyContent: "center", height: 40, backgroundColor: "skyblue", marginBottom: 10, borderColor: "Black", borderWidth: 1, width: "94%"}}
+        >
           <Text style={{fontSize: 18, color: "white"}}>Save</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{alignItems: "center", justifyContent: "center", height: 40, backgroundColor: "crimson", borderColor: "darkred", borderWidth: 1, width: "94%"}}>
-          <Text style={{fontSize: 18, color: "white"}}>Save</Text>
+        <TouchableOpacity
+          onPress={goBack}
+          style={{alignItems: "center", justifyContent: "center", height: 40, backgroundColor: "crimson", borderColor: "darkred", borderWidth: 1, width: "94%"}}
+        >
+          <Text style={{fontSize: 18, color: "white"}}>Cancel</Text>
         </TouchableOpacity>
       </View>
     </View>

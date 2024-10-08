@@ -1,7 +1,6 @@
 import { Button, FlatList, View, Text, SafeAreaView } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 
-export default function PeopleScreen() {
+export default function PeopleScreen({navigation}) {
   const people = [
     {
       id: "d825796c-4fc1-4879-ad86-048ece613581",
@@ -33,7 +32,7 @@ export default function PeopleScreen() {
             )}
         />
         <Button title="Add Person" onPress={() => {
-            console.log("Adding person")
+            navigation.navigate("AddPerson");
         }} />
     </View>
   );

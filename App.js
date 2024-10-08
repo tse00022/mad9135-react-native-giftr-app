@@ -1,25 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Platform } from 'react-native';
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import PeopleScreen from './screens/PeopleScreen';
-import AddPersonScreen from './screens/AddPersonScreen';
+import { StyleSheet, Text, View } from "react-native";
+import AppNavigator from "./AppNavigator";
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-    <SafeAreaView style={styles.container}>
-      <AddPersonScreen />
-    </SafeAreaView>
-    </SafeAreaProvider>
+    <View style={styles.container}>
+      <AppNavigator />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 
+    backgroundColor: "#fff",
   },
 });

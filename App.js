@@ -2,12 +2,13 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Platform } from 'react-native';
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import PeopleScreen from './screens/PeopleScreen';
+import AddPersonScreen from './screens/AddPersonScreen';
 
 export default function App() {
   return (
     <SafeAreaProvider>
     <SafeAreaView style={styles.container}>
-      <PeopleScreen />
+      <AddPersonScreen />
     </SafeAreaView>
     </SafeAreaProvider>
   );

@@ -29,7 +29,8 @@ export const PeopleProvider = ({children}) => {
         const newPerson = {
             id: Crypto.randomUUID(),
             name, 
-            dob
+            dob,
+            ideas: [],
         };
         const updatedPeople = [...people, newPerson];
         setPeople(updatedPeople);

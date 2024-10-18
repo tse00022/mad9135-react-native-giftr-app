@@ -2,10 +2,18 @@ import React, { useContext } from "react";
 import {
   GestureHandlerRootView,
   Swipeable,
-  TouchableOpacity
 } from "react-native-gesture-handler";
-import { Button, FlatList, View, Text, Image } from "react-native";
+import {
+  Button,
+  FlatList,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import PeopleContext from "../PeopleContext";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function PeopleScreen({ navigation }) {
   const { people, deletePerson } = useContext(PeopleContext);
@@ -13,7 +21,8 @@ export default function PeopleScreen({ navigation }) {
   const renderRightActions = (id) => (
     <TouchableOpacity
       onPress={() => deletePerson(id)}
-      style={{backgroundColor: "red",
+      style={{
+        backgroundColor: "red",
         justifyContent: "center",
         alignItems: "center",
         width: 80,
@@ -32,12 +41,25 @@ export default function PeopleScreen({ navigation }) {
           borderRadius: 5,
           padding: 10,
           backgroundColor: "lightgrey",
+          flexDirection: "row",
+          justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontSize: 18 }}>{item.name}</Text>
-        <Text style={{ fontSize: 16, color: "darkgrey" }}>
-          {item.dob}
-        </Text>
+        <View>
+          <Text style={{ fontSize: 18 }}>{item.name}</Text>
+          <Text style={{ fontSize: 16, color: "darkgrey" }}>{item.dob}</Text>
+        </View>
+
+        <TouchableOpacity 
+          onPress={() => navigation.navigate("IdeaScreen", {person: item})}
+          style={{ justifyContent: "center" }}
+        >
+          <MaterialCommunityIcons
+            name="lightbulb-on-outline"
+            size={24}
+            color="black"
+          />
+        </TouchableOpacity>
       </View>
     </Swipeable>
   );
@@ -55,15 +77,11 @@ export default function PeopleScreen({ navigation }) {
             navigation.navigate("AddPersonScreen");
           }}
         >
-          <Image
-            source={require("../assets/empty.png")}
-            style={{ width: 50, height: 50 }}
-            resizeMode="contain"
-          />
+          <AntDesign name="inbox" size={80} color="black" />
           <Text style={{ fontSize: 16, color: "darkgrey" }}>
             No people found
           </Text>
-          <Text styles={{ fontSize: 20, color: "darkgrey", }}>Add one</Text>
+          <Text styles={{ fontSize: 20, color: "darkgrey" }}>Add one</Text>
         </TouchableOpacity>
       )}
       {people && people.length > 0 && (

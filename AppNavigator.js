@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import PeopleScreen from "./screens/PeopleScreen";
 import AddPersonScreen from "./screens/AddPersonScreen";
+import IdeaScreen from "./screens/IdeaScreen";
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ export default function AppNavigator() {
           })}
         />
         <Stack.Screen name="AddPersonScreen" component={AddPersonScreen} />
+        <Stack.Screen name="IdeaScreen" component={IdeaScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

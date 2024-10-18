@@ -33,6 +33,7 @@ export const PeopleProvider = ({children}) => {
             ideas: [],
         };
         const updatedPeople = [...people, newPerson];
+        updatedPeople.sort((a, b) => new Date(a.dob) - new Date(b.dob));
         setPeople(updatedPeople);
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
     }

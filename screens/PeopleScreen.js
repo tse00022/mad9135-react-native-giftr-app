@@ -51,7 +51,7 @@ export default function PeopleScreen({ navigation }) {
         </View>
 
         <TouchableOpacity 
-          onPress={() => navigation.navigate("IdeaScreen", {person: item})}
+          onPress={() => navigation.navigate("IdeaScreen", {id: item.id})}
           style={{ justifyContent: "center" }}
         >
           <MaterialCommunityIcons

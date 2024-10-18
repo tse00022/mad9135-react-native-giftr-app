@@ -45,12 +45,14 @@ export default function PeopleScreen({ navigation }) {
   return (
     <GestureHandlerRootView style={{ padding: 10 }}>
       {people && people.length === 0 && (
-        <View
+        <TouchableOpacity
           style={{
-            height: "100%",
+            height: "95%",
             justifyContent: "center",
             alignItems: "center",
-            paddingBottom: 100,
+          }}
+          onPress={() => {
+            navigation.navigate("AddPersonScreen");
           }}
         >
           <Image
@@ -59,14 +61,10 @@ export default function PeopleScreen({ navigation }) {
             resizeMode="contain"
           />
           <Text style={{ fontSize: 16, color: "darkgrey" }}>
-            No people found,{" "}
+            No people found
           </Text>
-          <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("AddPersonScreen");
-              }}
-            ><Text styles={{ fontSize: 16, color: "darkgrey", }}>Add one</Text></TouchableOpacity>
-        </View>
+          <Text styles={{ fontSize: 20, color: "darkgrey", }}>Add one</Text>
+        </TouchableOpacity>
       )}
       {people && people.length > 0 && (
         <View>

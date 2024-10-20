@@ -65,7 +65,7 @@ export default function PeopleScreen({ navigation }) {
   );
 
   return (
-    <GestureHandlerRootView style={{ padding: 10 }}>
+    <View style={{ padding: 10 }}>
       {people && people.length === 0 && (
         <TouchableOpacity
           style={{
@@ -90,12 +90,12 @@ export default function PeopleScreen({ navigation }) {
           <FlatList
             contentContainerStyle={{ gap: 10 }}
             data={people}
-            style={{ marginTop: 10 }}
+            style={{ marginTop: 10, height: "100%" }}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
           />
         </View>
       )}
-    </GestureHandlerRootView>
+    </View>
   );
 }

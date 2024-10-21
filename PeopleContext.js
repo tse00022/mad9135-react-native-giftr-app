@@ -44,13 +44,36 @@ export const PeopleProvider = ({children}) => {
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
     }
 
-    const getIdeas = (id) => {
-        const person = people.find((person) => person.id === id);
+    const getIdeas = (personId) => {
+        const person = people.find((person) => person.id === personId);
         return person ? person.ideas : [];
     }
 
+    const setIdeas = async (personId, ideas) => {
+        const updatedPeople = people.map((person) => {
+            if (person.id === personId) {
+                person.ideas = ideas;
+            }
+            return person;
+        })
+        setPeople(updatedPeople);
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
+    }
+
+    const saveIdea = async (personId, text, photoPath , width, height) => {
+        const idea = {
+            id: Crypto.randomUUID(),
+            text,
+            img: photoPath,
+            width: width,
+            height: height
+        }
+        const ideas = [...getIdeas(personId), idea];
+        setIdeas(personId, ideas);
+    }
+
     return(
-        <PeopleContext.Provider value={{people, addPerson, deletePerson, getIdeas}} >
+        <PeopleContext.Provider value={{people, addPerson, deletePerson, getIdeas, saveIdea}} >
             {children}
         </PeopleContext.Provider>
     )

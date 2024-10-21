@@ -8,22 +8,29 @@ import {
   Image,
   TextInput,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  Dimensions
 } from "react-native";
 import { useContext, useRef } from "react";
 import PeopleContext from "../PeopleContext";
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import { useState } from "react";
+import CModal from "../components/CModal";
 
 export default IdeaScreen = ({ navigation, route }) => {
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState("back");
   const { id, name } = route.params;
-  const { people, getIdeas } = useContext(PeopleContext);
+  const { saveIdea } = useContext(PeopleContext);
   const cameraRef = useRef(null);
   const [photoTaken, setPhotoTaken] = useState(false);
   const [photoPath, setPhotoPath] = useState("");
   const [text, setText] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const ASPECT_RATIO = 2/3;
+  const [photoWidth, setPhotoWidth] = useState(0);
+  const [photoHeight, setPhotoHeight] = useState(0);
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -49,92 +56,122 @@ export default IdeaScreen = ({ navigation, route }) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
+      <View style={styles.container}>
         <Text style={{ fontSize: 26 }}>{`Add Idea for ${name}`}</Text>
 
         {/* Name Input */}
         <View style={{ marginVertical: 20 }}>
-            <Text style={{ fontSize: 20, marginBottom: 20 }}>
-                Gift Idea
-            </Text>
-            <TextInput
+          <Text style={{ fontSize: 20, marginBottom: 20 }}>Gift Idea</Text>
+          <TextInput
             style={{
-                fontSize: 20,
-                borderBottomColor: "grey",
-                borderBottomWidth: 2,
+              fontSize: 20,
+              borderBottomColor: "grey",
+              borderBottomWidth: 2,
             }}
             value={text}
             onChangeText={setText}
-            />
+          />
         </View>
 
         {/* Camera View */}
         {photoTaken ? (
-            <Image source={{ uri: photoPath }} style={{ flex:1 }} />
-        ): (
-            <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
-                <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={toggleFacing}>
-                    <Text style={styles.text}>Flip Camera</Text>
-                </TouchableOpacity>
-                </View>
-            </CameraView>
-            )
-        }
+          <Image source={{ uri: photoPath }} style={{ flex: 1 }} />
+        ) : (
+          <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.button} onPress={toggleFacing}>
+                <Text style={styles.text}>Flip Camera</Text>
+              </TouchableOpacity>
+            </View>
+          </CameraView>
+        )}
 
         {/* Controls */}
         <View style={{ alignItems: "center" }}>
-            {!photoTaken && (
+          {!photoTaken && (
             <TouchableOpacity
-                onPress={async () => {
+              onPress={async () => {
+                const width = Math.floor(Dimensions.get('window').width / 2);
+                const height = Math.floor(width / ASPECT_RATIO);
+                setPhotoHeight(height);
+                setPhotoWidth(width);
                 //Take a photo
                 if (cameraRef) {
-                    const options = { quality: 0.5, base64: true };
-                    const data = await cameraRef.current.takePictureAsync(options);
-                    console.log(data.uri); // Do something with the captured photo (e.g., upload, display)
-                    setPhotoPath(data.uri);
-                    setPhotoTaken(true);
+                  const options = { quality: 0.5, pictureSize: `${width}x${height}` };
+                  console.log(options);
+                  const data = await cameraRef.current.takePictureAsync(
+                    options
+                  );
+                  console.log(data.uri); // Do something with the captured photo (e.g., upload, display)
+                  setPhotoPath(data.uri);
+                  setPhotoTaken(true);
                 }
-                }}
-                style={{
+              }}
+              style={{
                 alignItems: "center",
                 justifyContent: "center",
                 height: 40,
                 backgroundColor: "skyblue",
                 marginBottom: 10,
                 width: "100%",
-                }}
+              }}
             >
-                <Text style={{ fontSize: 18, color: "white" }}>Take Photo</Text>
+              <Text style={{ fontSize: 18, color: "white" }}>Take Photo</Text>
             </TouchableOpacity>
-            )}
-            <TouchableOpacity
-            onPress={() => {}}
-            style={{
-                alignItems: "center",
-                justifyContent: "center",
-                height: 40,
-                backgroundColor: "skyblue",
-                marginBottom: 10,
-                width: "100%",
+          )}
+          <TouchableOpacity
+            onPress={() => {
+              if (text.trim() === "") {
+                setModalMessage("A gift idea should not be empty");
+                setShowModal(true);
+                return;
+              }
+              if (!photoTaken) {
+                setModalMessage("Please take a photo of the gift");
+                setShowModal(true);
+                return;
+              }
+
+              saveIdea(id, text, photoPath, photoWidth, photoHeight);
+
+
+              
             }}
-            >
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              height: 40,
+              backgroundColor: "skyblue",
+              marginBottom: 10,
+              width: "100%",
+            }}
+          >
             <Text style={{ fontSize: 18, color: "white" }}>Save</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => {}}
             style={{
-                alignItems: "center",
-                justifyContent: "center",
-                height: 40,
-                backgroundColor: "red",
-                width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+              height: 40,
+              backgroundColor: "red",
+              width: "100%",
             }}
-            >
+          >
             <Text style={{ fontSize: 18, color: "white" }}>Cancel</Text>
-            </TouchableOpacity>
+          </TouchableOpacity>
         </View>
-        </View>
+
+        <CModal
+          visible={showModal} 
+          title="Field required" 
+          message={modalMessage}
+          OKHandler={() => {
+            setShowModal(false)
+            setModalMessage("")
+          }}
+        />
+      </View>
     </TouchableWithoutFeedback>
   );
 };
@@ -143,7 +180,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: 10
+    padding: 10,
   },
   message: {
     textAlign: "center",

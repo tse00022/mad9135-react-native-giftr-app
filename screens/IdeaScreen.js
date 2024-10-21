@@ -2,6 +2,7 @@ import { FlatList, Text, View, TouchableOpacity, Image } from "react-native";
 import { useContext, useState } from "react";
 import PeopleContext from "../PeopleContext";
 import CModal from "../components/CModal";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default IdeaScreen = ({ navigation, route }) => {
   const { id, name } = route.params;
@@ -14,6 +15,26 @@ export default IdeaScreen = ({ navigation, route }) => {
   return (
     <View style={{ padding: 10, flex: 1 }}>
       <Text style={{ fontSize: 26 }}>{`${name}'s IDeas`}</Text>
+      {/* Empty state */}
+      {getIdeas(id).length === 0 && (
+        <TouchableOpacity
+          style={{
+            height: "95%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onPress={() => {
+            navigation.navigate("AddIdeaScreen", { id, name });
+          }}
+        >
+          <MaterialCommunityIcons name="power-plug-off-outline" size={80} color="black" />
+          <Text style={{ fontSize: 16, color: "darkgrey" }}>
+            No idea found
+          </Text>
+          <Text styles={{ fontSize: 20, color: "darkgrey" }}>Add one</Text>
+        </TouchableOpacity>
+      )}
+
       <FlatList
         data={getIdeas(id)}
         keyExtractor={(item) => item.id}

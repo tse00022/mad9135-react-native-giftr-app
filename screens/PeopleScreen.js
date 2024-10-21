@@ -10,10 +10,13 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  Platform,
+  StyleSheet
 } from "react-native";
 import PeopleContext from "../PeopleContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { MaterialIcons } from '@expo/vector-icons';
 import CModal from "../components/CModal";
 
 export default function PeopleScreen({ navigation }) {
@@ -75,17 +78,14 @@ export default function PeopleScreen({ navigation }) {
   );
 
   return (
-    <View style={{ padding: 10 }}>
+    <View style={{ padding: 10, flex: 1 }}>
       {/* Display empty state */}
       {people && people.length === 0 && (
-        <TouchableOpacity
+        <View
           style={{
             height: "95%",
             justifyContent: "center",
             alignItems: "center",
-          }}
-          onPress={() => {
-            navigation.navigate("AddPersonScreen");
           }}
         >
           <AntDesign name="inbox" size={80} color="black" />
@@ -93,7 +93,7 @@ export default function PeopleScreen({ navigation }) {
             No people found
           </Text>
           <Text styles={{ fontSize: 20, color: "darkgrey" }}>Add one</Text>
-        </TouchableOpacity>
+        </View>
       )}
       {/* Display people list */}
       {people && people.length > 0 && (
@@ -121,6 +121,27 @@ export default function PeopleScreen({ navigation }) {
           setShowModal(false);
         }}
       />
+
+      {/* Floating Action Button */}
+      { Platform.OS === 'android' && (
+        <TouchableOpacity style={styles.fab} onPress={()=>{navigation.navigate("AddPersonScreen")}}>
+            <MaterialIcons name="add" size={24} color="white" />
+        </TouchableOpacity>)}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    backgroundColor: '#2196F3',
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+  },
+});

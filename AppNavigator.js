@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, View } from "react-native";
+import { Button, View, Platform } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import PeopleScreen from "./screens/PeopleScreen";
@@ -26,7 +26,7 @@ export default function AppNavigator() {
           <Stack.Screen
             name="PeopleScreen"
             component={PeopleScreen}
-            options={({ navigation }) => ({
+            options={Platform.OS === 'ios' ? ({ navigation }) => ({
               title: "People",
               headerRight: () => (
                 <Button
@@ -34,7 +34,7 @@ export default function AppNavigator() {
                   title="Add Person"
                 />
               ),
-            })}
+            }) : undefined}
           />
           <Stack.Screen 
             name="AddPersonScreen" 
@@ -45,12 +45,12 @@ export default function AppNavigator() {
             component={IdeaScreen} 
             options={({ navigation, route }) => ({
               title: `Ideas`,
-              headerRight: () => (
+              headerRight: Platform.OS === 'ios' ? () => (
                 <Button
                   onPress={() => navigation.navigate("AddIdeaScreen", { id: route.params.id, name: route.params.name })}
                   title="Add Idea"
                 />
-              ),
+              ): undefined,
             })}
           />
           <Stack.Screen 

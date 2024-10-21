@@ -1,8 +1,9 @@
-import { FlatList, Text, View, TouchableOpacity, Image } from "react-native";
+import { FlatList, Text, View, TouchableOpacity, Image, StyleSheet, Platform } from "react-native";
 import { useContext, useState } from "react";
 import PeopleContext from "../PeopleContext";
 import CModal from "../components/CModal";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default IdeaScreen = ({ navigation, route }) => {
   const { id, name } = route.params;
@@ -17,14 +18,11 @@ export default IdeaScreen = ({ navigation, route }) => {
       <Text style={{ fontSize: 26 }}>{`${name}'s IDeas`}</Text>
       {/* Empty state */}
       {getIdeas(id).length === 0 && (
-        <TouchableOpacity
+        <View
           style={{
             height: "95%",
             justifyContent: "center",
             alignItems: "center",
-          }}
-          onPress={() => {
-            navigation.navigate("AddIdeaScreen", { id, name });
           }}
         >
           <MaterialCommunityIcons name="power-plug-off-outline" size={80} color="black" />
@@ -32,7 +30,7 @@ export default IdeaScreen = ({ navigation, route }) => {
             No idea found
           </Text>
           <Text styles={{ fontSize: 20, color: "darkgrey" }}>Add one</Text>
-        </TouchableOpacity>
+        </View>
       )}
 
       <FlatList
@@ -100,6 +98,30 @@ export default IdeaScreen = ({ navigation, route }) => {
           setShowModal(false);
         }}
       />
+
+      {/* Floating Action Button */}
+      {Platform.OS === 'android' && (
+        <TouchableOpacity style={styles.fab} onPress={()=>{
+          navigation.navigate("AddIdeaScreen", { id: route.params.id, name: route.params.name })
+        }}>
+          <MaterialIcons name="add" size={24} color="white" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    backgroundColor: '#2196F3',
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+  },
+});

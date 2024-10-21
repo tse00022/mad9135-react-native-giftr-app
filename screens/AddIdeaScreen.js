@@ -143,7 +143,9 @@ export default IdeaScreen = ({ navigation, route }) => {
             <Text style={{ fontSize: 18, color: "white" }}>Save</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={() => {
+              navigation.goBack();
+            }}
             style={{
               alignItems: "center",
               justifyContent: "center",

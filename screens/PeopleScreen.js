@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   GestureHandlerRootView,
   Swipeable,
@@ -14,13 +14,23 @@ import {
 import PeopleContext from "../PeopleContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import CModal from "../components/CModal";
 
 export default function PeopleScreen({ navigation }) {
   const { people, deletePerson } = useContext(PeopleContext);
+  const [idDelete, setIdDelete] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  
 
-  const renderRightActions = (id) => (
+  const renderRightActions = (item) => (
     <TouchableOpacity
-      onPress={() => deletePerson(id)}
+      onPress={() => {
+        console.log("gogogo", item)
+        setIdDelete(item.id);
+        setModalMessage(`Sure to delete people ${item.name} ?`);
+        setShowModal(true);
+      }}
       style={{
         backgroundColor: "red",
         justifyContent: "center",
@@ -35,7 +45,7 @@ export default function PeopleScreen({ navigation }) {
   );
 
   const renderItem = ({ item }) => (
-    <Swipeable renderRightActions={() => renderRightActions(item.id)}>
+    <Swipeable renderRightActions={() => renderRightActions(item)}>
       <View
         style={{
           borderRadius: 5,
@@ -98,6 +108,19 @@ export default function PeopleScreen({ navigation }) {
           />
         </View>
       )}
+
+      <CModal
+        visible={showModal}
+        title="Delete Confirmation"
+        message={modalMessage}
+        OKHandler={() => {
+          deletePerson(idDelete);
+          setShowModal(false);
+        }}
+        CancelHandler={() => {
+          setShowModal(false);
+        }}
+      />
     </View>
   );
 }

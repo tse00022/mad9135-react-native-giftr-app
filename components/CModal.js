@@ -14,20 +14,22 @@ export default function CModal({
           <View style={styles.modalView}>
             <Text style={styles.titleText}>{title}</Text>
             <Text style={styles.modalText}>{message}</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={OKHandler}
-            >
-              <Text style={styles.textStyle}>OK</Text>
-            </Pressable>
-            {CancelHandler && (
+            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={CancelHandler}
+                onPress={OKHandler}
               >
-                <Text style={styles.textStyle}>Cancel</Text>
+                <Text style={styles.textStyle}>OK</Text>
               </Pressable>
-            )}
+              {CancelHandler && (
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={CancelHandler}
+                >
+                  <Text style={styles.textStyle}>Cancel</Text>
+                </Pressable>
+              )}
+            </View>
           </View>
         </View>
       </View>

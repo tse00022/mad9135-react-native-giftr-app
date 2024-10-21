@@ -72,8 +72,13 @@ export const PeopleProvider = ({children}) => {
         setIdeas(personId, ideas);
     }
 
+    const deleteIdea = async (personId, ideaId) => {
+        const ideas = getIdeas(personId).filter((idea) => idea.id !== ideaId);
+        setIdeas(personId, ideas);
+    }
+
     return(
-        <PeopleContext.Provider value={{people, addPerson, deletePerson, getIdeas, saveIdea}} >
+        <PeopleContext.Provider value={{people, addPerson, deletePerson, getIdeas, saveIdea, deleteIdea}} >
             {children}
         </PeopleContext.Provider>
     )

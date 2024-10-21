@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import PeopleScreen from "./screens/PeopleScreen";
 import AddPersonScreen from "./screens/AddPersonScreen";
 import IdeaScreen from "./screens/IdeaScreen";
+import AddIdeaScreen from "./screens/AddIdeaScreen";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Stack = createStackNavigator();
@@ -21,7 +22,7 @@ export default function AppNavigator() {
           paddingBottom: insets.bottom,
         }}
       >
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName="PeopleScreen">
           <Stack.Screen
             name="PeopleScreen"
             component={PeopleScreen}
@@ -35,8 +36,30 @@ export default function AppNavigator() {
               ),
             })}
           />
-          <Stack.Screen name="AddPersonScreen" component={AddPersonScreen} />
-          <Stack.Screen name="IdeaScreen" component={IdeaScreen} />
+          <Stack.Screen 
+            name="AddPersonScreen" 
+            component={AddPersonScreen} 
+          />
+          <Stack.Screen 
+            name="IdeaScreen" 
+            component={IdeaScreen} 
+            options={({ navigation, route }) => ({
+              title: `Ideas`,
+              headerRight: () => (
+                <Button
+                  onPress={() => navigation.navigate("AddIdeaScreen", { id: route.params.id, name: route.params.name })}
+                  title="Add Idea"
+                />
+              ),
+            })}
+          />
+          <Stack.Screen 
+            name="AddIdeaScreen" 
+            component={AddIdeaScreen} 
+            options={({ navigation, route }) => ({
+              title: `Add Idea`,
+            })}
+          />
         </Stack.Navigator>
       </View>
     </NavigationContainer>

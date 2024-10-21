@@ -51,7 +51,7 @@ export default function PeopleScreen({ navigation }) {
         </View>
 
         <TouchableOpacity 
-          onPress={() => navigation.navigate("IdeaScreen", {id: item.id})}
+          onPress={() => navigation.navigate("IdeaScreen", {id: item.id, name: item.name})}
           style={{ justifyContent: "center" }}
         >
           <MaterialCommunityIcons
@@ -66,6 +66,7 @@ export default function PeopleScreen({ navigation }) {
 
   return (
     <View style={{ padding: 10 }}>
+      {/* Display empty state */}
       {people && people.length === 0 && (
         <TouchableOpacity
           style={{
@@ -84,9 +85,10 @@ export default function PeopleScreen({ navigation }) {
           <Text styles={{ fontSize: 20, color: "darkgrey" }}>Add one</Text>
         </TouchableOpacity>
       )}
+      {/* Display people list */}
       {people && people.length > 0 && (
         <View>
-          <Text style={{ fontSize: 20 }}>People List</Text>
+          <Text style={{ fontSize: 26 }}>People List</Text>
           <FlatList
             contentContainerStyle={{ gap: 10 }}
             data={people}

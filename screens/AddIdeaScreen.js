@@ -9,13 +9,14 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import { useContext, useRef } from "react";
 import PeopleContext from "../PeopleContext";
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import { useState } from "react";
 import CModal from "../components/CModal";
+import Feather from '@expo/vector-icons/Feather';
 
 export default IdeaScreen = ({ navigation, route }) => {
   const [permission, requestPermission] = useCameraPermissions();
@@ -28,7 +29,7 @@ export default IdeaScreen = ({ navigation, route }) => {
   const [text, setText] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const ASPECT_RATIO = 2/3;
+  const ASPECT_RATIO = 2 / 3;
   const [photoWidth, setPhotoWidth] = useState(0);
   const [photoHeight, setPhotoHeight] = useState(0);
 
@@ -79,8 +80,34 @@ export default IdeaScreen = ({ navigation, route }) => {
         ) : (
           <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
             <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.button} onPress={toggleFacing}>
-                <Text style={styles.text}>Flip Camera</Text>
+              <TouchableOpacity
+                onPress={async () => {
+                  const width = Math.floor(Dimensions.get("window").width / 2);
+                  const height = Math.floor(width / ASPECT_RATIO);
+                  setPhotoHeight(height);
+                  setPhotoWidth(width);
+                  //Take a photo
+                  if (cameraRef) {
+                    const options = {
+                      quality: 0.5,
+                      pictureSize: `${width}x${height}`,
+                    };
+                    console.log(options);
+                    const data = await cameraRef.current.takePictureAsync(
+                      options
+                    );
+                    console.log(data.uri); // Do something with the captured photo (e.g., upload, display)
+                    setPhotoPath(data.uri);
+                    setPhotoTaken(true);
+                  }
+                }}
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "transparent",
+                }}
+              >
+                <Feather name="camera" size={40} color="white" />
               </TouchableOpacity>
             </View>
           </CameraView>
@@ -88,37 +115,6 @@ export default IdeaScreen = ({ navigation, route }) => {
 
         {/* Controls */}
         <View style={{ alignItems: "center" }}>
-          {!photoTaken && (
-            <TouchableOpacity
-              onPress={async () => {
-                const width = Math.floor(Dimensions.get('window').width / 2);
-                const height = Math.floor(width / ASPECT_RATIO);
-                setPhotoHeight(height);
-                setPhotoWidth(width);
-                //Take a photo
-                if (cameraRef) {
-                  const options = { quality: 0.5, pictureSize: `${width}x${height}` };
-                  console.log(options);
-                  const data = await cameraRef.current.takePictureAsync(
-                    options
-                  );
-                  console.log(data.uri); // Do something with the captured photo (e.g., upload, display)
-                  setPhotoPath(data.uri);
-                  setPhotoTaken(true);
-                }
-              }}
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                height: 40,
-                backgroundColor: "skyblue",
-                marginBottom: 10,
-                width: "100%",
-              }}
-            >
-              <Text style={{ fontSize: 18, color: "white" }}>Take Photo</Text>
-            </TouchableOpacity>
-          )}
           <TouchableOpacity
             onPress={() => {
               if (text.trim() === "") {
@@ -133,9 +129,7 @@ export default IdeaScreen = ({ navigation, route }) => {
               }
 
               saveIdea(id, text, photoPath, photoWidth, photoHeight);
-
-
-              
+              navigation.goBack();
             }}
             style={{
               alignItems: "center",
@@ -163,12 +157,12 @@ export default IdeaScreen = ({ navigation, route }) => {
         </View>
 
         <CModal
-          visible={showModal} 
-          title="Field required" 
+          visible={showModal}
+          title="Field required"
           message={modalMessage}
           OKHandler={() => {
-            setShowModal(false)
-            setModalMessage("")
+            setShowModal(false);
+            setModalMessage("");
           }}
         />
       </View>
@@ -191,9 +185,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
     backgroundColor: "transparent",
-    margin: 64,
+    margin: "10%",
   },
   button: {
     flex: 1,
